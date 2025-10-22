@@ -175,18 +175,19 @@ void debug_stack() {
 }
 
 void add_combo(int group, int btn_mask, f_snes_btn_combo cb) {
-    int combo = combo_count[group];
-    if (group >= COMBO_GROUPS_MAX) {
+    if (group < 0 || group >= COMBO_GROUPS_MAX) {
         ESP_LOGE(TAG, "tried to use group id %d but max is %d",
             group,
             COMBO_GROUPS_MAX - 1
         );
         return;
     }
+
+    int combo = combo_count[group];
     if (combo >= COMBOS_MAX) {
-        char bin[SNES_REGISTER_NUM_BITS];
+        char bin[SNES_REGISTER_NUM_BITS + 1];
         ESP_LOGE(TAG, "attempted to add too many combos (group: %d, btn_mask: %s)",
-            group, register_to_binary(combo, bin)
+            group, register_to_binary(btn_mask, bin)
         );
         return;
     }
